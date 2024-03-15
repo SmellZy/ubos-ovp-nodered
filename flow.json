@@ -1,1 +1,294 @@
-[]
+[
+    {
+        "id": "a44157e54688f1a3",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c43acb1628535cb9",
+        "type": "mongodb",
+        "hostname": "mongo-2859-ubos-pm54c-mongo-2859.ubos-pm54c",
+        "topology": "direct",
+        "connectOptions": "authSource=admin",
+        "port": "27017",
+        "db": "products",
+        "name": "mongo-2859"
+    },
+    {
+        "id": "b1fc394dde507ae0",
+        "type": "http in",
+        "z": "a44157e54688f1a3",
+        "name": "[POST] /create",
+        "url": "/api/create",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "28ad07d4c4f09ff0"
+            ]
+        ]
+    },
+    {
+        "id": "ab3fa355471acf6c",
+        "type": "http in",
+        "z": "a44157e54688f1a3",
+        "name": "[GET] /api/read",
+        "url": "/api/read",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 200,
+        "wires": [
+            [
+                "2a0a6a37bafb5fc3"
+            ]
+        ]
+    },
+    {
+        "id": "46016f7892ea8dc4",
+        "type": "http in",
+        "z": "a44157e54688f1a3",
+        "name": "[DELETE] /api/delete",
+        "url": "/api/delete",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 700,
+        "wires": [
+            [
+                "264ce7b47930b2cf"
+            ]
+        ]
+    },
+    {
+        "id": "f5f02df2c1fc5b99",
+        "type": "http in",
+        "z": "a44157e54688f1a3",
+        "name": "[PUT] /api/put",
+        "url": "/api/put",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 420,
+        "wires": [
+            [
+                "9342a77a8f5795a0",
+                "7cb5267db242c0fe"
+            ]
+        ]
+    },
+    {
+        "id": "28ad07d4c4f09ff0",
+        "type": "function",
+        "z": "a44157e54688f1a3",
+        "name": "to MongoDB",
+        "func": "msg.collection = 'products';\n\nmsg.payload = {\n    ...msg.payload,\n    createDate: new Date,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "461b5b9acef43ed0",
+                "ac39cf927b32ae21"
+            ]
+        ]
+    },
+    {
+        "id": "2a0a6a37bafb5fc3",
+        "type": "function",
+        "z": "a44157e54688f1a3",
+        "name": "function 2",
+        "func": "msg.collection = 'products';\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 200,
+        "wires": [
+            [
+                "c379814516d7d496"
+            ]
+        ]
+    },
+    {
+        "id": "9342a77a8f5795a0",
+        "type": "function",
+        "z": "a44157e54688f1a3",
+        "name": "function 3",
+        "func": "msg.collection = 'products';\n\nmsg.query = {\n    _id: msg.payload._id\n};\n\nmsg.payload = {\n    name: msg.payload.name,\n    price: msg.payload.price,\n    rating: msg.payload.rating,\n    createDate: msg.payload.createDate\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 420,
+        "wires": [
+            [
+                "712d4091c2dba3ad",
+                "7ca084f42584a8ae"
+            ]
+        ]
+    },
+    {
+        "id": "264ce7b47930b2cf",
+        "type": "function",
+        "z": "a44157e54688f1a3",
+        "name": "function 4",
+        "func": "msg.collection = 'products';\n\nmsg.payload = {\n    _id: objectid(msg.payload._id)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "objectid",
+                "module": "objectid"
+            }
+        ],
+        "x": 360,
+        "y": 700,
+        "wires": [
+            [
+                "7e176538e3e4e43e",
+                "9429aec5dfc1a1e1"
+            ]
+        ]
+    },
+    {
+        "id": "461b5b9acef43ed0",
+        "type": "mongodb out",
+        "z": "a44157e54688f1a3",
+        "mongodb": "c43acb1628535cb9",
+        "name": "SAVE",
+        "collection": "products",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "store",
+        "x": 470,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c379814516d7d496",
+        "type": "mongodb in",
+        "z": "a44157e54688f1a3",
+        "mongodb": "c43acb1628535cb9",
+        "name": "FIND",
+        "collection": "products",
+        "operation": "find",
+        "x": 470,
+        "y": 200,
+        "wires": [
+            [
+                "deede272195dd829"
+            ]
+        ]
+    },
+    {
+        "id": "712d4091c2dba3ad",
+        "type": "mongodb out",
+        "z": "a44157e54688f1a3",
+        "mongodb": "c43acb1628535cb9",
+        "name": "UPDATE",
+        "collection": "products",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "update",
+        "x": 500,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7e176538e3e4e43e",
+        "type": "mongodb out",
+        "z": "a44157e54688f1a3",
+        "mongodb": "c43acb1628535cb9",
+        "name": "REMOVE",
+        "collection": "",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "delete",
+        "x": 560,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "ac39cf927b32ae21",
+        "type": "http response",
+        "z": "a44157e54688f1a3",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "deede272195dd829",
+        "type": "http response",
+        "z": "a44157e54688f1a3",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 650,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7ca084f42584a8ae",
+        "type": "http response",
+        "z": "a44157e54688f1a3",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 490,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "9429aec5dfc1a1e1",
+        "type": "http response",
+        "z": "a44157e54688f1a3",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 550,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "7cb5267db242c0fe",
+        "type": "debug",
+        "z": "a44157e54688f1a3",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 560,
+        "wires": []
+    }
+]
